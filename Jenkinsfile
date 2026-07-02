@@ -52,7 +52,7 @@ pipeline {
 
         stage('6. SonarQube analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('sonarqube-server-1') {
                     sh """
                         npx sonar-scanner \
                           -Dsonar.token=${SONAR_TOKEN}
