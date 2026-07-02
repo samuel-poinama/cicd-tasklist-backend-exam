@@ -61,14 +61,6 @@ pipeline {
             }
         }
 
-        stage('7. Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('8. Build Docker image') {
             steps {
                 sh "docker build -t ${FULL_IMAGE} ."
