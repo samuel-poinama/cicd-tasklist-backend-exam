@@ -88,7 +88,7 @@ pipeline {
         stage('12. Publish Docker image') {
             steps {
                 sh """
-                    echo \$DOCKERHUB_CREDENTIALS_PSW | docker login -u \$DOCKERHUB_CREDENTIALS_USR --password-stdin
+                    docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_CREDENTIALS}
                     docker push ${FULL_IMAGE}
                     docker logout
                 """
