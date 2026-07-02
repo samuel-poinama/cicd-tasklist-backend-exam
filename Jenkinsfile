@@ -21,7 +21,6 @@ pipeline {
         FULL_IMAGE      = "${IMAGE_NAME}:${IMAGE_TAG}"
 
         TRIVY_REPORT    = "trivy.json"
-        SBOM_REPORT     = "sbom.json"
     }
 
     stages {
@@ -44,13 +43,13 @@ pipeline {
             }
         }
 
-        stage('5. End-to-end tests') {
+        stage('4. End-to-end tests') {
             steps {
                 sh 'npm run test:e2e:coverage'
             }
         }
 
-        stage('6. SonarQube analysis') {
+        stage('5. SonarQube analysis') {
             steps {
                 withSonarQubeEnv('sonarqube-server-1') {
                     sh """
@@ -61,13 +60,13 @@ pipeline {
             }
         }
 
-        stage('8. Build Docker image') {
+        stage('6. Build Docker image') {
             steps {
                 sh "docker build -t ${FULL_IMAGE} ."
             }
         }
 
-        stage('9. Trivy security scan') {
+        stage('7. Trivy security scan') {
             steps {
                 sh """
                     trivy image \
@@ -79,9 +78,17 @@ pipeline {
             }
         }
 
-        stage('10. Archive security reports') {
+        stage('8. Generate SBOM') {
             steps {
-                archiveArtifacts artifacts: "${TRIVY_REPORT}", allowEmptyArchive: true
+                sh """
+                    trivy image --format spdx-json --output ${SBOM_REPORT} ${FULL_IMAGE}
+                """
+            }
+        }
+
+        stage('9. Archive security reports') {
+            steps {
+                archiveArtifacts artifacts: "${SBOM_REPORT}", allowEmptyArchive: true
             }
         }
 
