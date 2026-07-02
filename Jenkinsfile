@@ -74,8 +74,8 @@ pipeline {
                       --format json \
                       --exit-code 1 \
                       --severity HIGH,CRITICAL \
-                      --report all
-                      ${FULL_IMAGE} > ${TRIVY_REPORT}
+                      --report all ${FULL_IMAGE} > ${TRIVY_REPORT}
+
                 """
             }
         }
