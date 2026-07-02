@@ -44,20 +44,9 @@ pipeline {
             }
         }
 
-        stage('4. Publish test reports') {
-            steps {
-                junit testResults: '**/junit.xml', allowEmptyResults: true
-            }
-        }
-
         stage('5. End-to-end tests') {
             steps {
                 sh 'npm run test:e2e:coverage'
-            }
-            post {
-                always {
-                    junit testResults: '**/e2e-junit.xml', allowEmptyResults: true
-                }
             }
         }
 
