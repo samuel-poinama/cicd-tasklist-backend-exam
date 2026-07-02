@@ -85,13 +85,6 @@ pipeline {
             }
         }
 
-        stage('11. Generate SBOM') {
-            steps {
-                sh "syft ${FULL_IMAGE} -o cyclonedx-json=${SBOM_REPORT}"
-                archiveArtifacts artifacts: "${SBOM_REPORT}", allowEmptyArchive: true
-            }
-        }
-
         stage('12. Publish Docker image') {
             steps {
                 sh """
